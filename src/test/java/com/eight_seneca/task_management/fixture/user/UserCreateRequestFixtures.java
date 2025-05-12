@@ -1,17 +1,15 @@
 package com.eight_seneca.task_management.fixture.user;
 
 import com.eight_seneca.task_management.controller.request.UserCreateRequest;
-import com.eight_seneca.task_management.enums.TaskTypeEnum;
+import com.eight_seneca.task_management.util.UsernameGenerator;
 
-import java.time.Instant;
-import java.util.UUID;
 
 public class UserCreateRequestFixtures {
 
     public static UserCreateRequest createUserRequest() {
         UserCreateRequest taskRequest = UserCreateRequest.builder()
-                .fullName("Tom cruise")
-                .username("tomcruise")
+                .fullName(UsernameGenerator.generateRandomUsername(10))
+                .username(UsernameGenerator.generateRandomUsername(10))
                 .build();
         return taskRequest;
     }
