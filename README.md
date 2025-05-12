@@ -11,8 +11,8 @@ steps to run application:
 
 A brief explanation of your design and approach:
 1. module design:  I have created two services that are: task-management and common
- 1.1: common module is used for common configuration like kafka, redis, etc.. that are used for other services
- 1.2: task-management will import library from common service
+ - common module is used for common configuration like kafka, redis, etc.. that are used for other services
+ - task-management will import library from common service
  and in the future, If I create a new service, It also will import from common service
 2. database design:
 ![img.png](img.png)
@@ -27,10 +27,10 @@ user_id of task table is a foreign key of user's id table
 3. code design
 After reading the requirement, I see that a task can be a feature or bug, and they have its own specific fields
 I have two approach for this:
-the first one is : 
+- the first one is : 
     add one attribute additionalInfo with JsonB datatype. So with that additionalInfo we can contain more information in there without adding a new field in the future
     but the drawback is: It's hard to filter, search data in there.
-the second one is:
+- the second one is:
     It will be like database deign above.
     I have used factory design pattern for creating a bug task or feature task
     And with this design, It easier to search and filter attributes

@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.util.StringUtils;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -26,4 +27,7 @@ public class UserCreateRequest {
     @NotBlank
     private String fullName;
 
+    public void setUsername(String username) {
+        this.username = StringUtils.hasLength(username) ? username.toLowerCase() : null;
+    }
 }

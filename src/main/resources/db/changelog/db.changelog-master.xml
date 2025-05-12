@@ -7,4 +7,5 @@
            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
 
     <include file="versions/000001_init_schema.sql" relativeToChangelogFile="true"/>
+    <include file="versions/000002_add_unique_index_username.sql" relativeToChangelogFile="true"/>
 </databaseChangeLog>
