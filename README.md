@@ -37,6 +37,6 @@ the second one is:
 
 for my take, I choose the second one.
 
-4. junit test, integration test
+4. junit test, integration test:
 In this project, I have written junit test, integration test in /src/test folder
 
