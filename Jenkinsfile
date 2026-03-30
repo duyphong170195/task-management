@@ -64,10 +64,10 @@ spec:
                             echo "--- 🛡️ Fetching configurations from AWS SSM Parameter Store ---"
                             // Fetch Account ID
                             env.AWS_ACCOUNT = sh(script: "aws ssm get-parameter --name '/cicd/super-app/aws-account' --query 'Parameter.Value' --output text --region ${AWS_REGION}", returnStdout: true).trim()
-
+                            echo "${env.AWS_ACCOUNT}"
                             // Fetch Artifact Domain
                             env.DOMAIN_ARTIFACT = sh(script: "aws ssm get-parameter --name '/cicd/super-app/artifact-domain' --query 'Parameter.Value' --output text --region ${AWS_REGION}", returnStdout: true).trim()
-
+                            echo "env.DOMAIN_ARTIFACT"
                             // Fetch Sonar Token (Dạng SecureString)
 //                            env.SONAR_TOKEN = sh(script: "aws ssm get-parameter --name '/cicd/super-app/sonar-token' --with-decryption --query 'Parameter.Value' --output text --region ${AWS_REGION}", returnStdout: true).trim()
 
@@ -77,10 +77,12 @@ spec:
                             env.FULL_IMAGE_URL = "${env.AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com/${env.ECR_REPO}:${env.IMAGE_TAG}"
                             // Lấy GitHub User và Token từ SSM (Token nên là SecureString)
                             env.GIT_USER  = sh(script: "aws ssm get-parameter --name '/cicd/github/user' --query 'Parameter.Value' --output text --region ${AWS_REGION}", returnStdout: true).trim()
+                            echo "env.GIT_USER"
                             env.GIT_TOKEN = sh(script: "aws ssm get-parameter --name '/cicd/github/token' --with-decryption --query 'Parameter.Value' --output text --region ${AWS_REGION}", returnStdout: true).trim()
-
+                            echo "env.GIT_TOKEN"
                             // Fetch Manifest Repo URL (Ví dụ: github.com/phongnd/super-app-manifests.git)
                             env.MANIFEST_REPO = sh(script: "aws ssm get-parameter --name '/cicd/super-app/manifest-repo' --query 'Parameter.Value' --output text --region ${AWS_REGION}", returnStdout: true).trim()
+                            echo "env.MANIFEST_REPO"
                             // Mask biến nhạy cảm để không bị lộ trong log Jenkins
                             sh "set +x"
                         }
