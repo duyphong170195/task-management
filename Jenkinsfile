@@ -15,15 +15,13 @@ spec:
     volumeMounts:
     - name: maven-cache
       mountPath: /root/.m2
-  - name: docker
-    image: docker:24.0.7
+  - name: kaniko
+    image: gcr.io/kaniko-project/executor:debug
     command: ["sleep"]
     args: ["99d"]
-    securityContext:
-      privileged: true
     volumeMounts:
-    - name: docker-socket
-      mountPath: /var/run/docker.sock
+    - name: kaniko-config
+      mountPath: /kaniko/.docker/
   - name: aws-cli
     image: amazon/aws-cli:latest
     command: ["sleep"]
@@ -36,15 +34,15 @@ spec:
     image: 187104821419.dkr.ecr.ap-southeast-1.amazonaws.com/devops-tools/trivy:0.49.1
     command: ["sleep"]
     args: ["99d"]
-    securityContext:
-      privileged: true
-    volumeMounts:
-    - name: docker-socket
-      mountPath: /var/run/docker.sock
   volumes:
-  - name: docker-socket
-    hostPath:
-      path: /var/run/docker.sock
+  - name: kaniko-config
+    projected:
+      sources:
+      - secret:
+          name: ecr-registry-secret
+          items:
+            - key: .dockerconfigjson
+              path: config.json
   - name: maven-cache
     persistentVolumeClaim:
       claimName: maven-cache-pvc # Tối ưu cache Maven
@@ -150,29 +148,26 @@ spec:
         }
 
 
-        stage('Stage 2: Dockerize & Trivy Scan') {
+stage('Stage 2: Dockerize & Trivy Scan') {
             steps {
-                container('docker') {
+                // 1. Build & Push Image bằng Kaniko (Không cần Docker daemon)
+                container('kaniko') {
                     script {
-                        // Build Image
-                        sh "docker build -t ${env.FULL_IMAGE_URL} ."
+                        echo "--- 🚀 Building Image with Kaniko ---"
+                        sh "/kaniko/executor --context `pwd` --dockerfile Dockerfile --destination ${env.FULL_IMAGE_URL}"
                     }
                 }
+
+                // 2. Quét bảo mật từ xa (Remote Scan ECR) bằng Trivy
                 container('trivy') {
                     script {
-                        // Quét lỗ hổng bảo mật mức CRITICAL & HIGH. Fail build nếu phát hiện.
+                        echo "--- 🛡️ Scanning Image from ECR ---"
                         sh """
+                            # Cung cấp quyền cho Trivy truy cập ECR
+                            export TRIVY_USERNAME=AWS
+                            export TRIVY_PASSWORD=\$(aws ecr get-login-password --region ${env.AWS_REGION})
+
                             trivy image --severity HIGH,CRITICAL --exit-code 1 --no-progress ${env.FULL_IMAGE_URL}
-                        """
-                    }
-                }
-                container('docker') {
-                    script {
-                        // Nếu quét Trivy qua (exit code 0), thực hiện Push lên ECR
-                        // Lưu ý: Worker node đã gán IAM Role cho ECR
-                        sh """
-                            aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${env.AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com
-                            docker push ${env.FULL_IMAGE_URL}
                         """
                     }
                 }
