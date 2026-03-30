@@ -37,6 +37,17 @@
 		</repository>
 	</repositories>
 
+	<distributionManagement>
+		<repository>
+			<id>codeartifact</id>
+			<url>https://phongnd-artifacts-187104821419.d.codeartifact.ap-southeast-1.amazonaws.com/maven/task-management/</url>
+		</repository>
+		<snapshotRepository>
+			<id>codeartifact</id>
+			<url>https://phongnd-artifacts-187104821419.d.codeartifact.ap-southeast-1.amazonaws.com/maven/task-management/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
 	<dependencies>
 
 		<dependency>
