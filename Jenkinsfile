@@ -6,7 +6,7 @@ apiVersion: v1
 kind: Pod
 spec:
   imagePullSecrets:
-    - name: ecr-registry-secret
+   - name: ecr-registry-secret
   containers:
   - name: maven
     image: maven:3.9.6-eclipse-temurin-21
@@ -61,6 +61,7 @@ spec:
                 steps {
                     container('aws-cli') {
                         script {
+                        try {
                             echo "--- 🛡️ Fetching configurations from AWS SSM Parameter Store ---"
                             // Fetch Account ID
                             env.AWS_ACCOUNT = sh(script: "aws ssm get-parameter --name '/cicd/super-app/aws-account' --query 'Parameter.Value' --output text --region ${AWS_REGION}", returnStdout: true).trim()
@@ -85,6 +86,13 @@ spec:
                             echo "env.MANIFEST_REPO"
                             // Mask biến nhạy cảm để không bị lộ trong log Jenkins
                             sh "set +x"
+                             } catch (Exception e) {
+                                // Nếu lỗi, nó sẽ in ra Log cho bạn thấy
+                                echo "❌ LỖI RỒI CỘNG SỰ: ${e.getMessage()}"
+                                // Chạy thử lệnh CLI trực tiếp để xem thông báo lỗi từ AWS
+                                sh "aws ssm get-parameter --name '/cicd/super-app/aws-account' --region ${AWS_REGION}"
+                                error("Dừng build do không lấy được tham số từ AWS.")
+                             }
                         }
                     }
                 }
