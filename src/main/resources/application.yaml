@@ -11,6 +11,20 @@ spring:
     url: jdbc:postgresql://localhost:5432/postgres?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8&currentSchema=task_management
     username: root
     password: root
+    hikari:
+      auto-commit: true
+      connection-test-query: "SELECT 1"
+      connection-timeout: 10000
+      data-source-properties:
+        cachePrepStmts: true
+        prepStmtCacheSize: 1000
+        prepStmtCacheSqlLimit: 10000
+      idle-timeout: 60000
+      leak-detection-threshold: 60000
+      max-lifetime: 1800000
+      maximum-pool-size: 50
+      minimum-idle: 5
+      read-only: false
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
     enabled: true
@@ -18,8 +32,27 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
-    show-sql: false
+    show-sql: true
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect  # Explicitly set dialect
     open-in-view: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+
+logging:
+  level:
+    org:
+      springframework:
+        web:
+          filter:
+            CommonsRequestLoggingFilter: DEBUG

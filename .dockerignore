@@ -1,0 +1,12 @@
+target/
+*.log
+*.tmp
+.idea/
+.vscode/
+.git/
+.gitignore
+heap*
+README.md
+Dockerfile
+docker-compose.yml
+settings-test.xml

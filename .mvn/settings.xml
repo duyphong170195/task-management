@@ -1,0 +1,48 @@
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="
+            http://maven.apache.org/SETTINGS/1.0.0
+            https://maven.apache.org/xsd/settings-1.0.0.xsd">
+  <servers>
+    <server>
+      <id>maven-snapshots</id>
+      <username>admin</username>
+      <password>123456</password>
+    </server>
+    <server>
+      <id>maven-releases</id>
+      <username>admin</username>
+      <password>123456</password>
+    </server>
+    <server>
+      <id>maven-public</id> 
+      <username>admin</username>
+      <password>123456</password>
+    </server>
+  </servers>
+
+  <mirrors>
+    <mirror>
+        <id>allow-http-nexus</id>
+        <mirrorOf>maven-public</mirrorOf> <url>http://host.docker.internal:8081/repository/maven-public/</url>
+<!--        <blocked>false</blocked>-->
+    </mirror>
+</mirrors>
+<profiles>
+    <profile>
+      <id>nexus-profile</id>
+      <repositories>
+        <repository>
+          <id>maven-public</id>
+          <url>http://host.docker.internal:8081/repository/maven-public/</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+      </repositories>
+    </profile>
+  </profiles>
+
+  <activeProfiles>
+    <activeProfile>nexus-profile</activeProfile>
+  </activeProfiles>
+</settings>
