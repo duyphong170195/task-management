@@ -22,6 +22,10 @@ spec:
     volumeMounts:
     - name: docker-socket
       mountPath: /var/run/docker.sock
+  - name: aws-cli
+    image: amazon/aws-cli:latest
+    command: ["sleep"]
+    args: ["99d"]
   - name: git-kustomize
     image: line/kubectl-kustomize:latest
     command: ["sleep"]
