@@ -5,6 +5,8 @@ pipeline {
 apiVersion: v1
 kind: Pod
 spec:
+  imagePullSecrets:
+    - name: ecr-registry-secret
   containers:
   - name: maven
     image: maven:3.9.6-eclipse-temurin-21
