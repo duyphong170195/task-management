@@ -19,6 +19,8 @@ spec:
     image: docker:24.0.7
     command: ["sleep"]
     args: ["99d"]
+    securityContext:
+      privileged: true
     volumeMounts:
     - name: docker-socket
       mountPath: /var/run/docker.sock
@@ -34,6 +36,8 @@ spec:
     image: 187104821419.dkr.ecr.ap-southeast-1.amazonaws.com/devops-tools/trivy:0.49.1
     command: ["sleep"]
     args: ["99d"]
+    securityContext:
+      privileged: true
     volumeMounts:
     - name: docker-socket
       mountPath: /var/run/docker.sock
