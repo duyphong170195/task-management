@@ -25,7 +25,7 @@ spec:
     command: ["sleep"]
     args: ["99d"]
   - name: trivy
-    image: aquasec/trivy:latest
+    image: 187104821419.dkr.ecr.ap-southeast-1.amazonaws.com/devops-tools/trivy:0.49.1
     command: ["sleep"]
     args: ["99d"]
     volumeMounts:
