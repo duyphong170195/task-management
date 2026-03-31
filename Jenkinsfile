@@ -27,7 +27,7 @@ spec:
     command: ["sleep"]
     args: ["99d"]
   - name: git-kustomize
-    image: dtzar/helm-kubectl:latest
+    image: alpine/k8s:1.30.1
     command: ["sleep"]
     args: ["99d"]
   - name: trivy
@@ -207,6 +207,9 @@ spec:
                             git add .
                             git commit -m "🚀 [CI] Update image ${env.DEPLOY_ENV} to ${env.IMAGE_TAG}"
                             git push origin main
+                            # 5. Dọn dẹp sau khi xong để tiết kiệm tài nguyên Node
+                            cd ../../../../
+                            rm -rf super-app-k8s-manifests
                             set -x
                         """
                     }
