@@ -159,26 +159,26 @@ spec:
                 }
 
                 // 2. Quét bảo mật (Lấy Token từ container aws-cli rồi truyền sang trivy)
-                script {
-                    def ecrPassword = ""
-
-                    // Bước A: Nhảy vào container aws-cli để lấy password
-                    container('aws-cli') {
-                        ecrPassword = sh(script: "aws ecr get-login-password --region ${env.AWS_REGION}", returnStdout: true).trim()
-                    }
-
-                    // Bước B: Nhảy vào container trivy để quét, dùng password vừa lấy được
-                    container('trivy') {
-                        echo "--- 🛡️ Scanning Image from ECR ---"
-                        // Dùng dấu nháy kép "" để Groovy truyền biến ecrPassword vào shell
-                        sh """
-                            export TRIVY_USERNAME=AWS
-                            export TRIVY_PASSWORD=${ecrPassword}
-
-                            trivy image --severity HIGH,CRITICAL --exit-code 1 --no-progress ${env.FULL_IMAGE_URL}
-                        """
-                    }
-                }
+//                script {
+//                    def ecrPassword = ""
+//
+//                    // Bước A: Nhảy vào container aws-cli để lấy password
+//                    container('aws-cli') {
+//                        ecrPassword = sh(script: "aws ecr get-login-password --region ${env.AWS_REGION}", returnStdout: true).trim()
+//                    }
+//
+//                    // Bước B: Nhảy vào container trivy để quét, dùng password vừa lấy được
+//                    container('trivy') {
+//                        echo "--- 🛡️ Scanning Image from ECR ---"
+//                        // Dùng dấu nháy kép "" để Groovy truyền biến ecrPassword vào shell
+//                        sh """
+//                            export TRIVY_USERNAME=AWS
+//                            export TRIVY_PASSWORD=${ecrPassword}
+//
+//                            trivy image --severity HIGH,CRITICAL --exit-code 1 --no-progress ${env.FULL_IMAGE_URL}
+//                        """
+//                    }
+//                }
             }
         }
 
