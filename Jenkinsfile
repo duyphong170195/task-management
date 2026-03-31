@@ -194,7 +194,7 @@ spec:
                             # Clone repo manifest
                             git clone https://${env.GIT_USER}:${env.GIT_TOKEN}@github.com/${env.GIT_USER}/${env.MANIFEST_REPO}.git
                             # Truy cập vào thư mục overlay của môi trường tương ứng
-                            cd super-app-k8s-manifests/overlays/${env.DEPLOY_ENV}
+                            cd super-app-k8s-manifests/k8s/overlays/${env.DEPLOY_ENV}
 
                             # Cập nhật Image Tag mới vào file kustomization.yaml
                             kustomize edit set image task-management=${env.FULL_IMAGE_URL}
