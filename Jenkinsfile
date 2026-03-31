@@ -27,7 +27,7 @@ spec:
     command: ["sleep"]
     args: ["99d"]
   - name: git-kustomize
-    image: line/kubectl-kustomize:latest
+    image: dtzar/helm-kubectl:latest
     command: ["sleep"]
     args: ["99d"]
   - name: trivy
@@ -187,16 +187,26 @@ spec:
                 container('git-kustomize') {
                     script {
                         sh """
-                            set +x # Tắt log để giấu Token
-                            # Dùng trực tiếp biến env.GIT_USER và env.GIT_TOKEN đã lấy từ Step 0
+                            set +x
+                            # Xóa thư mục cũ nếu có để tránh lỗi clone
+                            rm -rf super-app-k8s-manifests
+
+                            # Clone repo manifest
                             git clone https://${env.GIT_USER}:${env.GIT_TOKEN}@${env.MANIFEST_REPO}
 
-                            cd task-management-k8s-manifests/overlays/${env.DEPLOY_ENV}
+                            # Truy cập vào thư mục overlay của môi trường tương ứng
+                            cd super-app-k8s-manifests/overlays/${env.DEPLOY_ENV}
+
+                            # Cập nhật Image Tag mới vào file kustomization.yaml
                             kustomize edit set image task-management=${env.FULL_IMAGE_URL}
 
-                            git config user.email "jenkins-bot@phongnd.uk"
-                            git config user.name "Jenkins GitOps Bot"
-                            git commit -am "🚀 [CI] Update image ${env.DEPLOY_ENV} to ${env.IMAGE_TAG}"
+                            # Config danh tính để Commit
+                            git config --global user.email "jenkins-bot@phongnd.uk"
+                            git config --global user.name "Jenkins GitOps Bot"
+
+                            # Commit và Push
+                            git add .
+                            git commit -m "🚀 [CI] Update image ${env.DEPLOY_ENV} to ${env.IMAGE_TAG}"
                             git push origin main
                             set -x
                         """
