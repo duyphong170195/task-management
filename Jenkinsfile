@@ -27,7 +27,7 @@ spec:
     command: ["sleep"]
     args: ["99d"]
   - name: git-kustomize
-    image: alpine/k8s:1.30.1
+    image: alpine/k8s:1.32.13
     command: ["sleep"]
     args: ["99d"]
   - name: trivy
