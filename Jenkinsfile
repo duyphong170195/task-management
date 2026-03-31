@@ -192,8 +192,7 @@ spec:
                             rm -rf super-app-k8s-manifests
 
                             # Clone repo manifest
-                            git clone https://${env.GIT_USER}:${env.GIT_TOKEN}@${env.MANIFEST_REPO}
-
+                            git clone https://${env.GIT_USER}:${env.GIT_TOKEN}@github.com/${env.GIT_USER}/${env.MANIFEST_REPO}.git
                             # Truy cập vào thư mục overlay của môi trường tương ứng
                             cd super-app-k8s-manifests/overlays/${env.DEPLOY_ENV}
 
