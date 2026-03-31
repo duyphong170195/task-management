@@ -148,7 +148,7 @@ spec:
         }
 
 
-stage('Stage 2: Dockerize & Trivy Scan') {
+        stage('Stage 2: Dockerize & Trivy Scan') {
             steps {
                 // 1. Build & Push Image bằng Kaniko (Không cần Docker daemon)
                 container('kaniko') {
