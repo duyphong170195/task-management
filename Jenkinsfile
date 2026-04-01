@@ -12,6 +12,12 @@ spec:
     image: maven:3.9.6-eclipse-temurin-21
     command: ["sleep"]
     args: ["99d"]
+    resources:
+      requests:
+        memory: "512Mi"
+        cpu: "200m"
+      limits:
+        memory: "800Mi" # Không để 1Gi vì sẽ làm sập Node 2GB
     volumeMounts:
     - name: maven-cache
       mountPath: /root/.m2
@@ -132,6 +138,8 @@ spec:
                 }
                 container('maven') {
                     sh """
+                        # Khai báo RAM cho Maven để không vượt quá Limit của Container
+                        export MAVEN_OPTS="-Xmx512m -XX:MaxMetaspaceSize=256m -XX:+ExitOnOutOfMemoryError"
                         echo '<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0">
                             <servers>
                                 <server>
