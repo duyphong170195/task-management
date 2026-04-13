@@ -1,5 +1,6 @@
 package com.eight_seneca.task_management.applicationservice.impl;
 
+`import com.eight_seneca.common.exception.CustomException;
 import com.eight_seneca.common.factory.Paging;
 import com.eight_seneca.common.util.SqlUtil;
 import com.eight_seneca.task_management.applicationservice.TaskApplicationService;
@@ -19,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -69,6 +71,10 @@ public class TaskApplicationServiceImpl implements TaskApplicationService {
 
     @Override
     public Paging<TaskDetailResponse> search(String keyword, TaskStatusEnum status, UUID userId, TaskTypeEnum taskType, Pageable pageable) {
+        log.info("hello world");
+        if(keyword == null) {
+            throw new CustomException(HttpStatus.NOT_FOUND, MessageCode.TASK_NOT_FOUND);
+        }
         if (!StringUtils.hasLength(keyword)) {
             keyword = null;
         } else {

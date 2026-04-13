@@ -21,6 +21,8 @@ public class TraceIdFilter extends OncePerRequestFilter {
             throws IOException {
 
         try {
+            MDC.put("http_method", request.getMethod());
+            MDC.put("http_uri", request.getRequestURI());
             String traceId = UUID.randomUUID().toString();
 //            MDC.put("traceId", traceId);
 
